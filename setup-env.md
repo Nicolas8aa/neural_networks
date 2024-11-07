@@ -38,5 +38,6 @@ docker run --gpus all -it --rm tensorflow/tensorflow:latest-gpu   python -c "imp
 ## References
 - [Install nvidia cuda tensorflow on windows wsl2](https://pradeepl.com/blog/installing-nvidia-cuda-tensorflow-on-windows-wsl2/)
 
-- [Download Installer for Linux WSL-Ubuntu 2.0 x86_64](https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&Distribution=WSL-Ubuntu&target_version=2.0&target_type=deb_local)
+- [CUDA Toolkit Installer Installer for Linux WSL-Ubuntu 2.0 x86_64](https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&Distribution=WSL-Ubuntu&target_version=2.0&target_type=deb_local)
 
+- [cuDNN Installer for Linux Ubuntu 22.04 x86_64](https://developer.nvidia.com/cudnn-downloads?target_os=Linux&target_arch=x86_64&Distribution=Ubuntu&target_version=22.04&target_type=deb_local)

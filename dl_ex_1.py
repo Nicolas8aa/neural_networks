@@ -13,6 +13,11 @@ from keras.models import Sequential
 from keras import layers
 import matplotlib.pyplot as plt
 import numpy as np
+import time
+
+import os
+#os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # 0 = ALL, 1 = WARNING, 2 = ERROR, 3 = NONE hide warning logs
+
 
 (X_train, y_train), (X_test, y_test) = mnist.load_data()
 
@@ -64,29 +69,51 @@ print(model.summary())
 
 EPOCHS = 20
 model.compile(loss='categorical_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
+
+start_time = time.time()
 history = model.fit(X_train, y_train, validation_data=(X_test, y_test),
                     epochs=EPOCHS, batch_size=128, verbose=0)
+end_time = time.time()
+
+training_time = end_time - start_time
+print(f"Training time: {training_time:.2f} seconds")
+
 
 def plot(h):
     LOSS = 0; ACCURACY = 1
-    training = np.zeros((2,EPOCHS)); testing = np.zeros((2,EPOCHS))
+    training = np.zeros((2, EPOCHS))
+    testing = np.zeros((2, EPOCHS))
+    
+    # Use 'loss', 'accuracy', 'val_loss', 'val_accuracy' keys for modern Keras
     training[LOSS] = h.history['loss']
     testing[LOSS] = h.history['val_loss']    # validation loss
-    training[ACCURACY] = h.history['acc']
-    testing[ACCURACY] = h.history['val_acc']  # validation accuracy
+    training[ACCURACY] = h.history['accuracy']
+    testing[ACCURACY] = h.history['val_accuracy']  # validation accuracy
 
-    epochs = range(1,EPOCHS+1)
-    fig, axs = plt.subplots(1,2, figsize=(17,5))
-    for i, label in zip((LOSS, ACCURACY),('loss', 'accuracy')):
-        axs[i].plot(epochs, training[i], 'b-', label='Training ' + label)
-        axs[i].plot(epochs, testing[i], 'y-', label='Test ' + label)
-        axs[i].set_title('Training and test ' + label)
-        axs[i].set_xlabel('Epochs')
-        axs[i].set_ylabel(label)
-        axs[i].legend()
+    epochs = range(1, EPOCHS + 1)
+    fig, axs = plt.subplots(1, 2, figsize=(17, 5))
+    
+    # Plot loss
+    axs[LOSS].plot(epochs, training[LOSS], 'b-', label='Training loss')
+    axs[LOSS].plot(epochs, testing[LOSS], 'y-', label='Test loss')
+    axs[LOSS].set_title('Training and Test Loss')
+    axs[LOSS].set_xlabel('Epochs')
+    axs[LOSS].set_ylabel('Loss')
+    axs[LOSS].legend()
+    
+    # Plot accuracy
+    axs[ACCURACY].plot(epochs, training[ACCURACY], 'b-', label='Training accuracy')
+    axs[ACCURACY].plot(epochs, testing[ACCURACY], 'y-', label='Test accuracy')
+    axs[ACCURACY].set_title('Training and Test Accuracy')
+    axs[ACCURACY].set_xlabel('Epochs')
+    axs[ACCURACY].set_ylabel('Accuracy')
+    axs[ACCURACY].legend()
+    
     plt.show()
-    loss, accuracy = model.evaluate(X_test,y_test,verbose=0)
-    print("Loss: " + str(loss))
-    print("Accuracy: " + str(accuracy))
+
+    # Evaluate final performance on test set
+    loss, accuracy = model.evaluate(X_test, y_test, verbose=0)
+    print("Final Test Loss: {:.4f}".format(loss))
+    print("Final Test Accuracy: {:.4f}".format(accuracy))
 
 plot(history)
